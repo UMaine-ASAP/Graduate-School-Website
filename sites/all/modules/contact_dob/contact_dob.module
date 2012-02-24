@@ -1,0 +1,40 @@
+<?php
+// $Id: contact_dob.module
+
+/**
+ * @file
+ * Adds DOB field to contact form
+ */
+
+/**
+ * Implementation of mtmcontact_form_contact_mail_page_alter()
+ */
+
+
+
+function contact_dob_form_contact_mail_page_alter(&$form, $form_state) {
+  global $base_path;
+
+  $form['dob'] = array(
+    '#title' => t('Date of Birth <a class="info-popup" href="'.
+    $base_path.'/why-date-birth">why?</a>'),
+    '#type' => 'textfield',
+
+  );
+ 
+  // reorder the elements in the form to include the elements being inserted
+  $order = array('contact_information', 'name', 'dob', 'mail', 'subject', 'message', 'copy', 'submit');
+  foreach($order as $key => $field) {
+    $form[$field]['#weight'] = $key;
+  }
+}
+
+
+function contact_dob_mail_alter(&$message) {
+// We have to be careful to alter only the contact form mail,
+// as this hook is used for every mail the system sends.
+  if ($message['id'] == 'contact_page_mail') {
+    $message['body'][2] = $message['body'][1];
+    $message['body'][1] = t("Date of Birth: ") + $message['params']['dob'];
+  }
+}

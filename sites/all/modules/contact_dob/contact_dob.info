@@ -1,0 +1,5 @@
+; $Id$
+name = Contact DOB
+description = Adds field to DOB
+dependencies[] = contact
+core = 6.x
